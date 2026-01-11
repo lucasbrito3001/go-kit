@@ -12,7 +12,7 @@ func Init(serviceName string) {
 		Level: level,
 	})
 
-	handler := ContextHandler{Handler: baseHandler}
+	handler := &ContextHandler{handler: baseHandler}
 
 	logger := slog.New(handler).With(
 		"service", serviceName,
