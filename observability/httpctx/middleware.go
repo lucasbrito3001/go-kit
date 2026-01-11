@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/lucasbrito3001/go-kit/observability/correlation"
 )
 
 func firstNonEmpty(values ...string) string {
@@ -26,7 +27,7 @@ func GinContextMiddleware() gin.HandlerFunc {
 			requestID = uuid.NewString()
 		}
 
-		ctx = context.WithValue(ctx, requestIDKey, requestID)
+		ctx = context.WithValue(ctx, correlation.RequestIDKey, requestID)
 
 		traceID := firstNonEmpty(
 			c.GetHeader(HeaderTraceID),
@@ -35,7 +36,7 @@ func GinContextMiddleware() gin.HandlerFunc {
 		)
 
 		if traceID != "" {
-			ctx = context.WithValue(ctx, traceIDKey, traceID)
+			ctx = context.WithValue(ctx, correlation.TraceIDKey, traceID)
 		}
 
 		c.Request = req.WithContext(ctx)
